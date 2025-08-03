@@ -8,7 +8,7 @@ const Hero = () => {
       <section id="hero" className="max-w-7xl mx-auto relative">
         <div className="relative flex flex-col items-center w-full px-6">
           <div className="absolute inset-0">
-            <div className="absolute inset-0 -z-10 h-[600px] md:h-[90svh] w-full [background:radial-gradient(130%_140%_at_50%_10%,#18181b_40%,#ec4899_100%)] rounded-b-xl"></div>
+            <div className="absolute inset-0 -z-10 h-[600px] md:h-[90svh] w-full dark:[background:radial-gradient(130%_140%_at_50%_10%,#18181b_40%,#ec4899_100%)] [background:radial-gradient(130%_140%_at_50%_10%,#f8fafc_40%,#ec4899_100%)] rounded-b-xl"></div>
           </div>
         </div>
 

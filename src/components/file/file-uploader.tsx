@@ -511,9 +511,9 @@ const FileUploader = ({ src = "", config }: Props) => {
                         alt={`Preview of ${file.name}`}
                         className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-200" />
+                      <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/20 transition-colors duration-200" />
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        <div className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg">
+                        <div className="bg-destructive hover:bg-destructive/90 text-destructive-foreground rounded-full p-2 shadow-lg">
                           <X className="size-5" aria-hidden="true" />
                         </div>
                       </div>
@@ -908,7 +908,7 @@ const FileUploader = ({ src = "", config }: Props) => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="w-fit h-auto p-0 text-red-500 hover:text-red-600 hover:bg-transparent"
+                className="w-fit h-auto p-0 text-destructive hover:text-destructive/80 hover:bg-transparent"
                 onClick={handleReset}
                 aria-label={`Remove uploaded file: ${fileName}`}
               >
@@ -953,7 +953,7 @@ const FileUploader = ({ src = "", config }: Props) => {
             <Button
               variant="ghost"
               size="sm"
-              className="w-fit h-auto p-0 text-red-500 hover:text-red-600 hover:bg-transparent"
+              className="w-fit h-auto p-0 text-destructive hover:text-destructive/80 hover:bg-transparent"
               onClick={handleReset}
               aria-label={`Remove uploaded file: ${fileName}`}
             >
@@ -967,7 +967,7 @@ const FileUploader = ({ src = "", config }: Props) => {
         <motion.div
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-1 text-xs text-red-500"
+          className="flex items-center gap-1 text-xs text-destructive"
           role="alert"
           aria-live="polite"
         >
