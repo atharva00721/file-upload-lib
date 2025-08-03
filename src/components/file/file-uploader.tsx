@@ -423,7 +423,12 @@ const FileUploader = ({ src = "", config }: Props) => {
           onBlur={handleBlur}
           tabIndex={0}
           role="button"
-          aria-label="Upload files by dragging and dropping or clicking to browse"
+          aria-label={`Upload files by dragging and dropping or clicking to browse. Accepted file types: ${formatFileTypes(
+            mergedConfig.acceptedFileTypes!
+          )}. Maximum file size: ${
+            mergedConfig.maxFileSizeMB
+          }MB. Maximum files: ${mergedConfig.maxFiles}`}
+          aria-describedby="multi-file-instructions"
           animate={{
             scale: dragActive ? 1.02 : 1,
             borderWidth: dragActive ? "3px" : "2px",
@@ -451,7 +456,10 @@ const FileUploader = ({ src = "", config }: Props) => {
           {files.length > 0 ? (
             <div className="flex w-full flex-col gap-3">
               <div className="flex items-center justify-between gap-2">
-                <h3 className="truncate text-sm font-medium">
+                <h3
+                  className="truncate text-sm font-medium"
+                  id="uploaded-files-count"
+                >
                   Uploaded Files ({files.length})
                 </h3>
                 <Button
@@ -459,8 +467,12 @@ const FileUploader = ({ src = "", config }: Props) => {
                   size="sm"
                   onClick={openFileDialog}
                   disabled={files.length >= (mergedConfig.maxFiles || 6)}
+                  aria-label={`Add more files. Current files: ${files.length} of ${mergedConfig.maxFiles}`}
                 >
-                  <UploadCloud className="w-3.5 h-3.5 mr-1 opacity-60" />
+                  <UploadCloud
+                    className="w-3.5 h-3.5 mr-1 opacity-60"
+                    aria-hidden="true"
+                  />
                   Add more
                 </Button>
               </div>
@@ -488,17 +500,21 @@ const FileUploader = ({ src = "", config }: Props) => {
                       }}
                       tabIndex={0}
                       role="button"
-                      aria-label={`Remove ${file.name}`}
+                      aria-label={`Remove ${file.name} (${(
+                        file.size /
+                        1024 /
+                        1024
+                      ).toFixed(1)}MB)`}
                     >
                       <img
                         src={file.preview}
-                        alt={file.name}
+                        alt={`Preview of ${file.name}`}
                         className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-200" />
                       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <div className="bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg">
-                          <X className="size-5" />
+                          <X className="size-5" aria-hidden="true" />
                         </div>
                       </div>
                     </motion.div>
@@ -512,22 +528,29 @@ const FileUploader = ({ src = "", config }: Props) => {
                 className="bg-background mb-2 flex size-11 shrink-0 items-center justify-center rounded-full border"
                 aria-hidden="true"
               >
-                <Image className="size-4 opacity-60" />
+                <Image className="size-4 opacity-60" aria-hidden="true" />
               </div>
               <p className="mb-1.5 text-sm font-medium">Drop your files here</p>
               <p className="text-muted-foreground text-xs">
                 {formatFileTypes(mergedConfig.acceptedFileTypes!)} (max.{" "}
                 {mergedConfig.maxFileSizeMB}MB each)
               </p>
-              <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-                <Keyboard className="w-3 h-3" />
+              <div
+                className="flex items-center gap-2 mt-2 text-xs text-muted-foreground"
+                id="multi-file-instructions"
+              >
+                <Keyboard className="w-3 h-3" aria-hidden="true" />
                 <span>Press Enter, Space, or Ctrl+O to browse</span>
               </div>
               <Button
                 className={cn("mt-4", getButtonClasses())}
                 onClick={openFileDialog}
+                aria-label="Select files to upload"
               >
-                <UploadCloud className="w-4 h-4 mr-1 opacity-60" />
+                <UploadCloud
+                  className="w-4 h-4 mr-1 opacity-60"
+                  aria-hidden="true"
+                />
                 Select files
               </Button>
             </div>
@@ -537,6 +560,7 @@ const FileUploader = ({ src = "", config }: Props) => {
             <div
               onClick={openFileDialog}
               className="absolute inset-0 cursor-pointer"
+              aria-hidden="true"
             />
           )}
         </motion.div>
@@ -555,7 +579,10 @@ const FileUploader = ({ src = "", config }: Props) => {
           onBlur={handleBlur}
           tabIndex={0}
           role="button"
-          aria-label="Upload file by dragging and dropping or clicking to browse"
+          aria-label={`Upload file by dragging and dropping or clicking to browse. Accepted file types: ${formatFileTypes(
+            mergedConfig.acceptedFileTypes!
+          )}. Maximum file size: ${mergedConfig.maxFileSizeMB}MB`}
+          aria-describedby="drag-drop-instructions"
           animate={{
             scale: dragActive ? 1.02 : 1,
             borderWidth: dragActive ? "3px" : "2px",
@@ -575,7 +602,7 @@ const FileUploader = ({ src = "", config }: Props) => {
               <motion.img
                 key="preview"
                 src={filepath}
-                alt="file"
+                alt={`Preview of uploaded file: ${fileName}`}
                 width={220}
                 height={220}
                 initial={{ opacity: 0, scale: 0.95 }}
@@ -593,7 +620,7 @@ const FileUploader = ({ src = "", config }: Props) => {
                 transition={{ duration: 0.3 }}
                 className="text-center flex flex-col items-center text-sm gap-2 text-muted-foreground"
               >
-                <UploadCloud className="w-6 h-6" />
+                <UploadCloud className="w-6 h-6" aria-hidden="true" />
                 <p>{mergedConfig.placeholderText}</p>
                 <p className="text-xs opacity-70">or click to upload</p>
                 <div className="text-xs opacity-60 space-y-1">
@@ -602,8 +629,11 @@ const FileUploader = ({ src = "", config }: Props) => {
                     Type: {formatFileTypes(mergedConfig.acceptedFileTypes!)}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 mt-2 text-xs opacity-60">
-                  <Keyboard className="w-3 h-3" />
+                <div
+                  className="flex items-center gap-2 mt-2 text-xs opacity-60"
+                  id="drag-drop-instructions"
+                >
+                  <Keyboard className="w-3 h-3" aria-hidden="true" />
                   <span>Press Enter, Space, or Ctrl+O to browse</span>
                 </div>
               </motion.div>
@@ -620,6 +650,7 @@ const FileUploader = ({ src = "", config }: Props) => {
           <div
             onClick={() => inputRef.current?.click()}
             className="absolute inset-0 cursor-pointer"
+            aria-hidden="true"
           />
         </motion.div>
       );
@@ -638,7 +669,10 @@ const FileUploader = ({ src = "", config }: Props) => {
           onBlur={handleBlur}
           tabIndex={0}
           role="button"
-          aria-label="Upload file by dragging and dropping or clicking to browse"
+          aria-label={`Upload file by dragging and dropping or clicking to browse. Accepted file types: ${formatFileTypes(
+            mergedConfig.acceptedFileTypes!
+          )}. Maximum file size: ${mergedConfig.maxFileSizeMB}MB`}
+          aria-describedby="preview-instructions"
           layout
           animate={{
             scale: dragActive ? 1.02 : 1,
@@ -663,7 +697,7 @@ const FileUploader = ({ src = "", config }: Props) => {
               <motion.img
                 key="preview"
                 src={filepath}
-                alt="preview"
+                alt={`Preview of uploaded file: ${fileName}`}
                 className="w-full h-full object-cover"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -682,10 +716,16 @@ const FileUploader = ({ src = "", config }: Props) => {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
               >
-                <Image className={cn(getIconSize(), "opacity-40")} />
+                <Image
+                  className={cn(getIconSize(), "opacity-40")}
+                  aria-hidden="true"
+                />
                 <span>{mergedConfig.placeholderText}</span>
-                <div className="flex items-center gap-2 mt-2 text-xs opacity-60">
-                  <Keyboard className="w-3 h-3" />
+                <div
+                  className="flex items-center gap-2 mt-2 text-xs opacity-60"
+                  id="preview-instructions"
+                >
+                  <Keyboard className="w-3 h-3" aria-hidden="true" />
                   <span>Press Enter, Space, or Ctrl+O to browse</span>
                 </div>
               </motion.div>
@@ -712,7 +752,10 @@ const FileUploader = ({ src = "", config }: Props) => {
         onBlur={handleBlur}
         tabIndex={0}
         role="button"
-        aria-label="Upload file by dragging and dropping or clicking to browse"
+        aria-label={`Upload file by dragging and dropping or clicking to browse. Accepted file types: ${formatFileTypes(
+          mergedConfig.acceptedFileTypes!
+        )}. Maximum file size: ${mergedConfig.maxFileSizeMB}MB`}
+        aria-describedby="default-instructions"
         animate={{
           scale: dragActive ? 1.02 : 1,
           borderWidth: dragActive ? "3px" : "2px",
@@ -736,7 +779,7 @@ const FileUploader = ({ src = "", config }: Props) => {
             <motion.img
               key="default-preview"
               src={filepath}
-              alt="file"
+              alt={`Preview of uploaded file: ${fileName}`}
               className="w-full h-full object-cover"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -755,10 +798,16 @@ const FileUploader = ({ src = "", config }: Props) => {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
             >
-              <Image className={cn(getIconSize(), "opacity-40")} />
+              <Image
+                className={cn(getIconSize(), "opacity-40")}
+                aria-hidden="true"
+              />
               <span>{mergedConfig.placeholderText}</span>
-              <div className="flex items-center gap-2 mt-2 text-xs opacity-60">
-                <Keyboard className="w-3 h-3" />
+              <div
+                className="flex items-center gap-2 mt-2 text-xs opacity-60"
+                id="default-instructions"
+              >
+                <Keyboard className="w-3 h-3" aria-hidden="true" />
                 <span>Press Enter, Space, or Ctrl+O to browse</span>
               </div>
             </motion.div>
@@ -769,7 +818,11 @@ const FileUploader = ({ src = "", config }: Props) => {
   };
 
   return (
-    <div className={containerClasses}>
+    <div
+      className={containerClasses}
+      role="region"
+      aria-label="File upload component"
+    >
       <input
         ref={inputRef}
         type="file"
@@ -782,6 +835,11 @@ const FileUploader = ({ src = "", config }: Props) => {
         multiple={mergedConfig.defaultVariant === "multi-file"}
         hidden
         id="file-input"
+        aria-label={`File input for ${
+          mergedConfig.defaultVariant
+        } upload. Accepted types: ${formatFileTypes(
+          mergedConfig.acceptedFileTypes!
+        )}`}
       />
 
       {mergedConfig.defaultVariant === "button" ? (
@@ -792,6 +850,8 @@ const FileUploader = ({ src = "", config }: Props) => {
                 <motion.div
                   key="button-preview"
                   className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0 border border-border"
+                  role="img"
+                  aria-label={`Preview of uploaded file: ${fileName}`}
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -799,20 +859,23 @@ const FileUploader = ({ src = "", config }: Props) => {
                 >
                   <img
                     src={filepath}
-                    alt="preview"
+                    alt=""
                     className="w-full h-full object-cover"
+                    aria-hidden="true"
                   />
                 </motion.div>
               ) : (
                 <motion.div
                   key="button-placeholder"
                   className="w-12 h-12 rounded-md bg-muted flex items-center justify-center flex-shrink-0 border border-border"
+                  role="img"
+                  aria-label="No file uploaded"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Image className="w-6 h-6 opacity-40" />
+                  <Image className="w-6 h-6 opacity-40" aria-hidden="true" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -821,6 +884,13 @@ const FileUploader = ({ src = "", config }: Props) => {
                 className={cn("w-full", getButtonClasses())}
                 onClick={() => inputRef.current?.click()}
                 variant={filepath ? "outline" : "default"}
+                aria-label={
+                  filepath
+                    ? `Change uploaded file: ${fileName}`
+                    : `Upload file. Accepted types: ${formatFileTypes(
+                        mergedConfig.acceptedFileTypes!
+                      )}`
+                }
               >
                 {filepath ? "Change file" : mergedConfig.uploadLabel}
               </Button>
@@ -840,6 +910,7 @@ const FileUploader = ({ src = "", config }: Props) => {
                 size="sm"
                 className="w-fit h-auto p-0 text-red-500 hover:text-red-600 hover:bg-transparent"
                 onClick={handleReset}
+                aria-label={`Remove uploaded file: ${fileName}`}
               >
                 Remove
               </Button>
@@ -856,6 +927,11 @@ const FileUploader = ({ src = "", config }: Props) => {
                 <Button
                   className={cn("w-full", getButtonClasses())}
                   onClick={() => inputRef.current?.click()}
+                  aria-label={`${
+                    mergedConfig.uploadLabel
+                  }. Accepted file types: ${formatFileTypes(
+                    mergedConfig.acceptedFileTypes!
+                  )}. Maximum file size: ${mergedConfig.maxFileSizeMB}MB`}
                 >
                   {mergedConfig.uploadLabel}
                 </Button>
@@ -879,6 +955,7 @@ const FileUploader = ({ src = "", config }: Props) => {
               size="sm"
               className="w-fit h-auto p-0 text-red-500 hover:text-red-600 hover:bg-transparent"
               onClick={handleReset}
+              aria-label={`Remove uploaded file: ${fileName}`}
             >
               Remove
             </Button>
@@ -892,8 +969,9 @@ const FileUploader = ({ src = "", config }: Props) => {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-1 text-xs text-red-500"
           role="alert"
+          aria-live="polite"
         >
-          <AlertCircle className="size-3 shrink-0" />
+          <AlertCircle className="size-3 shrink-0" aria-hidden="true" />
           <span>{errors[0]}</span>
         </motion.div>
       )}
